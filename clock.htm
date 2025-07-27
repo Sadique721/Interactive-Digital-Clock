@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Clock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #133ad5, #c03610);
+            transition: background 1s ease-in-out, color 0.5s;
+        }
+
+        .clock-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+            transition: background 0.5s, transform 0.3s ease-in-out;
+        }
+
+        .clock-container:hover {
+            transform: scale(1.05);
+        }
+
+        .time {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #333;
+            transition: color 0.5s ease-in-out;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .date {
+            font-size: 1.5rem;
+            color: #666;
+            margin-top: 10px;
+            transition: color 0.5s ease-in-out;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .toggle-mode {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        .dark-mode {
+            background: linear-gradient(to right, #063e76, #55cee0);
+            color: #f0f0f0;
+        }
+
+        .dark-mode .clock-container {
+            background: rgba(0, 0, 0, 0.8);
+            color: #f0f0f0;
+        }
+
+        .dark-mode .time, 
+        .dark-mode .date {
+            color: #f0f0f0;
+        }
+
+        .dark-mode .toggle-mode {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container fade-in">
+        <div class="time" id="time">00:00:00</div>
+        <div class="date" id="date">Monday, January 1, 2023</div>
+        <button class="toggle-mode" id="toggle-mode">Dark Mode</button>
+        <button class="toggle-sound" id="toggle-sound">Sound Off</button>
+    </div>
+
+    <audio id="tick-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('time').textContent = timeString;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+
+            // Play ticking sound if enabled
+            if (soundEnabled) {
+                document.getElementById('tick-sound').play();
+            }
+
+            // Dynamic background based on time
+            const hour = now.getHours();
+            if (hour >= 6 && hour < 18) {
+                document.body.style.background = 'linear-gradient(to right, #ff9a9e, #fad0c4)';
+            } else {
+                document.body.style.background = 'linear-gradient(to right, #2c3e50, #4ca1af)';
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const toggleButton = document.getElementById('toggle-mode');
+            toggleButton.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundButton = document.getElementById('toggle-sound');
+            soundButton.textContent = soundEnabled ? 'Sound Off' : 'Sound On';
+            localStorage.setItem('soundEnabled', soundEnabled);
+        }
+
+        function autoDarkMode() {
+            const hours = new Date().getHours();
+            if (hours >= 18 || hours < 6) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggle-mode').textContent = 'Light Mode';
+            }
+        }
+
+        let soundEnabled = localStorage.getItem('soundEnabled') === 'true' || true;
+        document.getElementById('toggle-sound').textContent = soundEnabled ? 'Sound Off' : 'Sound On';
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('toggle-mode').textContent = 'Light Mode';
+        }
+
+        document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
+        document.getElementById('toggle-sound').addEventListener('click', toggleSound);
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        autoDarkMode(); // Auto dark mode based on time
+    </script>
+</body>
+</html>
