@@ -2,178 +2,451 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Clock</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>TimeWeaver | AI Clock Dashboard 2026</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-        body {
-            font-family: 'Orbitron', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            background: linear-gradient(to right, #133ad5, #c03610);
-            transition: background 1s ease-in-out, color 0.5s;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
-        .clock-container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 10% 30%, #0a0f2a, #030614);
+            transition: background 0.5s ease;
+            overflow-x: hidden;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-            transition: background 0.5s, transform 0.3s ease-in-out;
         }
 
-        .clock-container:hover {
-            transform: scale(1.05);
+        /* Aurora + Particles overlay */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .time {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #333;
-            transition: color 0.5s ease-in-out;
-            animation: float 3s ease-in-out infinite;
+        /* Main container */
+        .dashboard {
+            position: relative;
+            z-index: 2;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
         }
 
-        .date {
-            font-size: 1.5rem;
-            color: #666;
-            margin-top: 10px;
-            transition: color 0.5s ease-in-out;
-            animation: float 3s ease-in-out infinite;
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(20, 30, 55, 0.45);
+            backdrop-filter: blur(14px);
+            border-radius: 42px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
-        .toggle-mode {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* Clock specific */
+        .clock-main {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .analog-clock {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1e2a4a, #0b1120);
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 0 8px rgba(255,255,255,0.1), inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .hour-hand { width: 5px; height: 45px; background: #ffd966; left: calc(50% - 2.5px); }
+        .min-hand { width: 3px; height: 65px; background: #e0e0e0; left: calc(50% - 1.5px); }
+        .sec-hand { width: 2px; height: 75px; background: #ff7b89; left: calc(50% - 1px); }
+        .center-dot { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        .digital-time {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, #aaccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        button {
+            background: rgba(255,255,255,0.15);
             border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-            transition: background 0.5s, color 0.5s;
+            padding: 10px 18px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .dark-mode {
-            background: linear-gradient(to right, #063e76, #55cee0);
-            color: #f0f0f0;
+        button:active { transform: scale(0.96); }
+        .magnetic-btn { transition: transform 0.2s ease; }
+
+        input, select {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
         }
 
-        .dark-mode .clock-container {
-            background: rgba(0, 0, 0, 0.8);
-            color: #f0f0f0;
+        .widget-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-left: 4px solid #00c3ff;
+            padding-left: 12px;
         }
 
-        .dark-mode .time, 
-        .dark-mode .date {
-            color: #f0f0f0;
-        }
-
-        .dark-mode .toggle-mode {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        @media (max-width: 780px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .digital-time { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="clock-container fade-in">
-        <div class="time" id="time">00:00:00</div>
-        <div class="date" id="date">Monday, January 1, 2023</div>
-        <button class="toggle-mode" id="toggle-mode">Dark Mode</button>
-        <button class="toggle-sound" id="toggle-sound">Sound Off</button>
+<canvas id="particles-canvas"></canvas>
+
+<div class="dashboard">
+    <!-- MAIN CLOCK CARD -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-clock"></i> Live TimeCore</div>
+        <div class="clock-main">
+            <div class="analog-clock">
+                <div class="hand hour-hand" id="hour-hand"></div>
+                <div class="hand min-hand" id="min-hand"></div>
+                <div class="hand sec-hand" id="sec-hand"></div>
+                <div class="center-dot"></div>
+            </div>
+            <div style="text-align:center">
+                <div class="digital-time" id="digital-time">--:--:--</div>
+                <div id="date-info" style="margin-top:8px; opacity:0.8"></div>
+                <div style="margin-top:10px">
+                    <button id="toggle-format-btn"><i class="fas fa-toggle-on"></i> 24H</button>
+                    <button id="voice-cmd-btn"><i class="fas fa-microphone"></i> Voice</button>
+                </div>
+                <div id="voice-status" style="font-size:12px; margin-top:5px"></div>
+            </div>
+        </div>
+        <div style="display: flex; gap:10px; justify-content:center; margin-top:16px">
+            <button id="world-clock-toggle"><i class="fas fa-globe"></i> World Clocks</button>
+            <button id="stopwatch-btn"><i class="fas fa-stopwatch"></i> Stopwatch</button>
+            <button id="timer-btn"><i class="fas fa-hourglass-half"></i> Timer</button>
+        </div>
+        <div id="world-clock-panel" style="display:none; margin-top:20px; text-align:center"></div>
     </div>
 
-    <audio id="tick-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    <!-- Stopwatch / Timer Card -->
+    <div class="glass-card" id="stopwatch-card">
+        <div class="widget-title"><i class="fas fa-stopwatch"></i> Stopwatch</div>
+        <div style="font-size:2.5rem; text-align:center" id="stopwatch-display">00:00:00</div>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px">
+            <button id="sw-start">Start</button>
+            <button id="sw-pause">Pause</button>
+            <button id="sw-reset">Reset</button>
+        </div>
+        <hr style="margin: 15px 0; opacity:0.3">
+        <div class="widget-title"><i class="fas fa-hourglass-start"></i> Timer</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">
+            <input type="number" id="timer-minutes" placeholder="Min" style="width:80px">
+            <input type="number" id="timer-seconds" placeholder="Sec" style="width:80px">
+            <button id="timer-start">Start Timer</button>
+        </div>
+        <div style="font-size:1.8rem; text-align:center" id="timer-display">00:00</div>
+    </div>
 
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('time').textContent = timeString;
+    <!-- Weather + Greeting Card -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-cloud-sun"></i> AI Atmosphere</div>
+        <div id="greeting-text" style="font-size:1.4rem"></div>
+        <div id="weather-info">📍 Loading weather...</div>
+        <div id="sun-times">🌅 Sunrise: -- | 🌇 Sunset: --</div>
+        <button id="announce-btn"><i class="fas fa-volume-up"></i> Speak Time</button>
+    </div>
 
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+    <!-- Alarm + Pomodoro Card -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-bell"></i> Alarms & Pomodoro</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <input type="time" id="alarm-time">
+            <button id="set-alarm">Set Alarm</button>
+        </div>
+        <ul id="alarm-list" style="margin-top:12px; list-style:none"></ul>
+        <hr>
+        <div><strong>🍅 Pomodoro</strong></div>
+        <button id="pomo-start">Start 25min</button>
+        <button id="pomo-break">Break 5min</button>
+        <div id="pomo-timer">25:00</div>
+    </div>
 
-            // Play ticking sound if enabled
-            if (soundEnabled) {
-                document.getElementById('tick-sound').play();
+    <!-- Notes & Goals -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-edit"></i> Daily Goals & Notes</div>
+        <textarea id="notes-area" rows="2" placeholder="Write your notes..." style="width:100%; border-radius:20px; padding:10px"></textarea>
+        <input type="text" id="goal-input" placeholder="New goal">
+        <button id="add-goal">Add Goal</button>
+        <ul id="goal-list"></ul>
+    </div>
+
+    <!-- Calendar + Time diff -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-calendar-alt"></i> Mini Calendar</div>
+        <div id="calendar-view"></div>
+        <div class="widget-title" style="margin-top:12px"><i class="fas fa-calculator"></i> Time Diff</div>
+        <input type="datetime-local" id="diff-date1"> to <input type="datetime-local" id="diff-date2">
+        <button id="calc-diff">Calculate</button>
+        <div id="diff-result"></div>
+    </div>
+
+    <!-- Customization -->
+    <div class="glass-card">
+        <div class="widget-title"><i class="fas fa-palette"></i> Theme & Style</div>
+        <input type="color" id="accent-color" value="#00c3ff">
+        <button id="reset-settings">Reset All</button>
+        <div>Background style: 
+            <select id="bg-select">
+                <option value="dark">Deep Space</option>
+                <option value="aurora">Aurora</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<audio id="alarm-sound" preload="auto">
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // -------------------- GLOBAL STATE --------------------
+    let hour12 = true;            // 12hr format
+    let worldClocksVisible = false;
+    let stopwatchInterval = null, stopwatchTime = 0, stopwatchRunning = false;
+    let timerInterval = null, timerRemaining = 0;
+    let alarms = JSON.parse(localStorage.getItem('alarms') || '[]');
+    let pomodoroInterval = null, pomodoroActive = false;
+    let notes = localStorage.getItem('notes') || '';
+    let goals = JSON.parse(localStorage.getItem('goals') || '[]');
+
+    // DOM Elements
+    const digitalTimeEl = document.getElementById('digital-time');
+    const dateInfoEl = document.getElementById('date-info');
+    const hourHand = document.getElementById('hour-hand');
+    const minHand = document.getElementById('min-hand');
+    const secHand = document.getElementById('sec-hand');
+    const toggleFormatBtn = document.getElementById('toggle-format-btn');
+    const worldToggle = document.getElementById('world-clock-toggle');
+    const worldPanel = document.getElementById('world-clock-panel');
+    const stopwatchDisplay = document.getElementById('stopwatch-display');
+    const timerDisplay = document.getElementById('timer-display');
+    const greetingEl = document.getElementById('greeting-text');
+    const weatherDiv = document.getElementById('weather-info');
+    const sunDiv = document.getElementById('sun-times');
+    const alarmList = document.getElementById('alarm-list');
+    const notesArea = document.getElementById('notes-area');
+    const goalList = document.getElementById('goal-list');
+    const goalInput = document.getElementById('goal-input');
+    const addGoalBtn = document.getElementById('add-goal');
+    const calendarView = document.getElementById('calendar-view');
+    const diffResult = document.getElementById('diff-result');
+    const accentColorPicker = document.getElementById('accent-color');
+    const bgSelect = document.getElementById('bg-select');
+
+    // Helper: format time
+    function formatTime(hours, minutes, seconds) {
+        let displayH = hours;
+        let suffix = '';
+        if (hour12) {
+            suffix = hours >= 12 ? ' PM' : ' AM';
+            displayH = hours % 12 || 12;
+        }
+        return `${displayH.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}${hour12 ? suffix : ''}`;
+    }
+
+    // Update clocks
+    function updateClocks() {
+        const now = new Date();
+        const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+        digitalTimeEl.textContent = formatTime(h, m, s);
+        dateInfoEl.textContent = now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+        // Analog hands
+        const hourDeg = (h % 12) * 30 + m * 0.5;
+        const minDeg = m * 6 + s * 0.1;
+        const secDeg = s * 6;
+        hourHand.style.transform = `rotate(${hourDeg}deg)`;
+        minHand.style.transform = `rotate(${minDeg}deg)`;
+        secHand.style.transform = `rotate(${secDeg}deg)`;
+
+        // Greeting
+        const greeting = h < 12 ? 'Good Morning' : (h < 18 ? 'Good Afternoon' : 'Good Evening');
+        greetingEl.innerHTML = `${greeting}, User! 🌟`;
+
+        // Check alarms
+        const timeStr = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+        alarms.forEach((alarm, idx) => {
+            if (alarm.time === timeStr && !alarm.triggeredToday) {
+                document.getElementById('alarm-sound').play();
+                if ('Notification' in window && Notification.permission === 'granted') new Notification('⏰ Alarm!', { body: `Time is ${timeStr}` });
+                alarm.triggeredToday = true;
+                localStorage.setItem('alarms', JSON.stringify(alarms));
             }
+        });
+        requestAnimationFrame(() => {});
+    }
 
-            // Dynamic background based on time
-            const hour = now.getHours();
-            if (hour >= 6 && hour < 18) {
-                document.body.style.background = 'linear-gradient(to right, #ff9a9e, #fad0c4)';
-            } else {
-                document.body.style.background = 'linear-gradient(to right, #2c3e50, #4ca1af)';
-            }
-        }
+    // World Clock
+    function renderWorldClocks() {
+        const zones = ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney'];
+        let html = '<div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center">';
+        zones.forEach(zone => {
+            const time = new Date().toLocaleTimeString('en-US', { timeZone: zone, hour12: hour12, hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            html += `<div style="background:rgba(0,0,0,0.3); border-radius:20px; padding:8px"><b>${zone.split('/')[1]}</b><br>${time}</div>`;
+        });
+        html += '</div>';
+        worldPanel.innerHTML = html;
+    }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const toggleButton = document.getElementById('toggle-mode');
-            toggleButton.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
+    // Stopwatch Logic
+    function updateStopwatchUI() { stopwatchDisplay.textContent = new Date(stopwatchTime * 1000).toISOString().substr(11, 8); }
+    function swStart() { if(stopwatchInterval) return; stopwatchRunning=true; stopwatchInterval=setInterval(()=>{ stopwatchTime++; updateStopwatchUI(); },1000); }
+    function swPause() { clearInterval(stopwatchInterval); stopwatchInterval=null; }
+    function swReset() { swPause(); stopwatchTime=0; updateStopwatchUI(); }
 
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const soundButton = document.getElementById('toggle-sound');
-            soundButton.textContent = soundEnabled ? 'Sound Off' : 'Sound On';
-            localStorage.setItem('soundEnabled', soundEnabled);
-        }
+    // Timer
+    function updateTimerUI() { let mins = Math.floor(timerRemaining/60), secs = timerRemaining%60; timerDisplay.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`; }
+    function startTimer(seconds) { if(timerInterval) clearInterval(timerInterval); timerRemaining = seconds; updateTimerUI(); timerInterval = setInterval(()=>{ if(timerRemaining<=0){ clearInterval(timerInterval); timerInterval=null; alert('Timer finished!'); return; } timerRemaining--; updateTimerUI(); },1000); }
 
-        function autoDarkMode() {
-            const hours = new Date().getHours();
-            if (hours >= 18 || hours < 6) {
-                document.body.classList.add('dark-mode');
-                document.getElementById('toggle-mode').textContent = 'Light Mode';
-            }
-        }
+    // Alarm functions
+    function renderAlarms() { alarmList.innerHTML = alarms.map((a,i)=>`<li>⏰ ${a.time} <button onclick="removeAlarm(${i})">❌</button></li>`).join(''); }
+    window.removeAlarm = (idx) => { alarms.splice(idx,1); localStorage.setItem('alarms',JSON.stringify(alarms)); renderAlarms(); };
+    function setAlarm() { const val = document.getElementById('alarm-time').value; if(!val) return; alarms.push({ time:val, triggeredToday:false }); localStorage.setItem('alarms',JSON.stringify(alarms)); renderAlarms(); }
 
-        let soundEnabled = localStorage.getItem('soundEnabled') === 'true' || true;
-        document.getElementById('toggle-sound').textContent = soundEnabled ? 'Sound Off' : 'Sound On';
+    // Pomodoro
+    let pomodoroSeconds = 25*60;
+    function updatePomoUI() { let m = Math.floor(pomodoroSeconds/60), s = pomodoroSeconds%60; document.getElementById('pomo-timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+    function startPomodoro(seconds) { if(pomodoroInterval) clearInterval(pomodoroInterval); pomodoroSeconds = seconds; updatePomoUI(); pomodoroInterval = setInterval(()=>{ if(pomodoroSeconds<=0){ clearInterval(pomodoroInterval); alert('Pomodoro done!'); return; } pomodoroSeconds--; updatePomoUI(); },1000); }
 
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.getElementById('toggle-mode').textContent = 'Light Mode';
-        }
+    // Weather using Open-Meteo (No API Key)
+    async function fetchWeather(lat, lon) {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=sunrise,sunset&timezone=auto`;
+        const res = await fetch(url).then(r=>r.json());
+        const temp = res.current_weather.temperature;
+        const weatherCode = res.current_weather.weathercode;
+        const condition = weatherCode < 3 ? '☀️ Clear' : '☁️ Cloudy';
+        weatherDiv.innerHTML = `🌡️ ${temp}°C, ${condition}`;
+        if(res.daily) sunDiv.innerHTML = `🌅 ${res.daily.sunrise[0].split('T')[1]}  🌇 ${res.daily.sunset[0].split('T')[1]}`;
+    }
+    function getLocation() { if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>fetchWeather(pos.coords.latitude, pos.coords.longitude), ()=>weatherDiv.innerHTML='📍 Location denied'); }
 
-        document.getElementById('toggle-mode').addEventListener('click', toggleDarkMode);
-        document.getElementById('toggle-sound').addEventListener('click', toggleSound);
+    // Calendar
+    function renderCalendar() { const d = new Date(); const month = d.toLocaleString('default',{month:'long'}); calendarView.innerHTML = `<div style="text-align:center">📅 ${month} ${d.getFullYear()}<br>${d.toDateString()}</div>`; }
 
-        setInterval(updateClock, 1000);
-        updateClock();
-        autoDarkMode(); // Auto dark mode based on time
-    </script>
+    // Goals & Notes
+    function renderGoals() { goalList.innerHTML = goals.map((g,i)=>`<li>✅ ${g} <button onclick="removeGoal(${i})">🗑️</button></li>`).join(''); }
+    window.removeGoal = (idx)=>{ goals.splice(idx,1); localStorage.setItem('goals',JSON.stringify(goals)); renderGoals(); };
+    addGoalBtn.onclick = ()=>{ if(goalInput.value.trim()){ goals.push(goalInput.value.trim()); localStorage.setItem('goals',JSON.stringify(goals)); renderGoals(); goalInput.value=''; } };
+    notesArea.value = localStorage.getItem('notes') || ''; notesArea.oninput = ()=>localStorage.setItem('notes', notesArea.value);
+
+    // Time Diff
+    function calcTimeDiff() { const d1 = new Date(document.getElementById('diff-date1').value); const d2 = new Date(document.getElementById('diff-date2').value); const diff = Math.abs(d2-d1)/(1000*3600); diffResult.innerText = isNaN(diff) ? 'Select dates' : `Difference: ${diff.toFixed(2)} hours`; }
+
+    // Voice Commands & Speech
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if(SpeechRecognition) recognition = new SpeechRecognition(); recognition?.continuous? false: null;
+    document.getElementById('voice-cmd-btn').onclick = ()=>{
+        if(!recognition) return alert("Voice not supported");
+        recognition.lang = 'en-US';
+        recognition.start();
+        document.getElementById('voice-status').innerText = '🎙️ Listening...';
+        recognition.onresult = (e) => {
+            const cmd = e.results[0][0].transcript.toLowerCase();
+            document.getElementById('voice-status').innerText = `Command: ${cmd}`;
+            if(cmd.includes('stopwatch start')) swStart();
+            else if(cmd.includes('stopwatch reset')) swReset();
+            else if(cmd.includes('timer 5 minutes')) startTimer(300);
+            else if(cmd.includes('dark mode')) document.body.style.background = "radial-gradient(circle at 10% 30%, #0a0f2a, #030614)";
+            else if(cmd.includes('light mode')) document.body.style.background = "#cfe7ff";
+            else if(cmd.includes('what time')) speakCurrentTime();
+            else recognition?.stop();
+        };
+    };
+    function speakCurrentTime() { const now = new Date(); const speech = new SpeechSynthesisUtterance(`Current time is ${now.toLocaleTimeString()}`); window.speechSynthesis.speak(speech); }
+    document.getElementById('announce-btn').onclick = speakCurrentTime;
+
+    // Theme & Settings
+    accentColorPicker.addEventListener('input', e => document.documentElement.style.setProperty('--accent', e.target.value));
+    bgSelect.onchange = () => { if(bgSelect.value === 'aurora') document.body.style.background = "linear-gradient(145deg, #120c2b, #251b4a)"; else document.body.style.background = "radial-gradient(circle at 10% 30%, #0a0f2a, #030614)"; };
+    document.getElementById('reset-settings').onclick = () => { localStorage.clear(); location.reload(); };
+    document.getElementById('calc-diff').onclick = calcTimeDiff;
+    document.getElementById('set-alarm').onclick = setAlarm;
+    document.getElementById('sw-start').onclick = swStart;
+    document.getElementById('sw-pause').onclick = swPause;
+    document.getElementById('sw-reset').onclick = swReset;
+    document.getElementById('timer-start').onclick = () => { let mins = parseInt(document.getElementById('timer-minutes').value)||0; let secs = parseInt(document.getElementById('timer-seconds').value)||0; startTimer(mins*60+secs); };
+    document.getElementById('pomo-start').onclick = () => startPomodoro(25*60);
+    document.getElementById('pomo-break').onclick = () => startPomodoro(5*60);
+    toggleFormatBtn.onclick = () => { hour12 = !hour12; updateClocks(); };
+    worldToggle.onclick = () => { worldClocksVisible = !worldClocksVisible; worldPanel.style.display = worldClocksVisible ? 'block' : 'none'; if(worldClocksVisible) renderWorldClocks(); };
+
+    // Particle System (canvas)
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    let particles = [];
+    for(let i=0;i<80;i++) particles.push({x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight, r:Math.random()*2+1, alpha:Math.random()*0.5});
+    function drawParticles() { if(!ctx) return; ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,200,${p.alpha})`; ctx.fill(); p.y+=0.5; if(p.y>canvas.height) p.y=0; }); requestAnimationFrame(drawParticles); }
+    window.addEventListener('resize',()=>{ resizeCanvas(); });
+    resizeCanvas(); drawParticles();
+
+    // GSAP Magnetic Buttons
+    document.querySelectorAll('button').forEach(btn => { btn.addEventListener('mousemove',(e)=>{ const rect = btn.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width/2; const y = e.clientY - rect.top - rect.height/2; gsap.to(btn,{duration:0.3, x:x*0.1, y:y*0.1, ease:"power2"}); }); btn.addEventListener('mouseleave',()=>gsap.to(btn,{duration:0.3, x:0, y:0})); });
+    
+    // Initial calls
+    updateClocks(); setInterval(updateClocks, 1000);
+    getLocation(); renderCalendar(); renderGoals(); renderAlarms();
+    if(Notification.permission !== 'granted') Notification.requestPermission();
+</script>
 </body>
 </html>
