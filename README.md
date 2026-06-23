@@ -1,72 +1,61 @@
-# 🕒 Interactive Digital Clock
+# 🕒 Premium Art Deco Golden Wall Clock & Dashboard
 
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
+![GSAP](https://img.shields.io/badge/Animation-GSAP3-green?logo=greensock&logoColor=white)
 
-A sleek, animated digital clock with dynamic themes and sound effects.
+An ultra-premium, interactive luxury wall clock simulation that perfectly replicates the beautiful geometric brass and gold designer timepiece from the reference image, set inside a cozy dining room atmosphere.
+
+---
 
 ## ✨ Features
-- **Real-time Updates**: Precise to the second
-- **Dynamic Themes**: Auto day/night mode + manual toggle
-- **Ticking Sound**: Optional audio feedback
-- **Date Display**: Full formatted date
-- **Smooth Animations**: Floating and fade effects
-- **Persistent Settings**: Remembers user preferences
 
-## 🎥 Demo
-![Clock Demo](screenshots/demo.gif)
+### 🎨 Visual & Aesthetic Design
+- **High-Fidelity SVG Replica**: Fully vector-rendered model of the ornate gold wall clock, featuring parallel golden rods, offset vertical posts, and double outer rings with gold bead accents.
+- **Detailed Art Deco Plates**: Custom-drawn geometric panels, including the iconic leaf/tree radial vein patterns and concentric semicircle arch plates.
+- **Dining Room Atmosphere**: Immersive environment rendering a realistic slate wall backdrop, wooden dining table, white ceramic vase with peach roses, and dark-wood chairs with cane-rattan webbing.
 
-## 🛠️ Tech Stack
-mermaid
-graph LR
-    A[Frontend] --> B(HTML5)
-    A --> C(CSS Animations)
-    A --> D(JavaScript Date API)
-    A --> E[LocalStorage]
-   A --> F[Google Fonts]
+### 🔊 Client-Side Synthesized Sound Engine (Web Audio API)
+- **Escapement Ticking**: A realistic, multi-beat mechanical tick-tock.
+- **Resonant Pendulum**: Deeper, hollow wooden "tock".
+- **Smartwatch Beep**: Clean, minimalist electronic ping.
+- **Hourly Tubular Chimes**: A deep synthesized Westminster-style bell chime on the hour.
+- **Full Volume Controls**: Toggle chimes, adjust tick volume, or mute sounds instantly.
 
-   🚀 Quick Start
-bash
-git clone https://github.com/yourusername/interactive-digital-clock.git
-cd interactive-digital-clock
-open clock.htm
-🌟 Key Code Features
-This project features:
-✅ Auto Day/Night Mode (changes with time of day)
-✅ Custom Sound Effects with toggle control
-✅ Persistent Settings using localStorage
-✅ Smooth Animations (floating, fade-in)
-✅ Responsive Design works on all devices
+### 🎬 Interactive 3D & Showcase Animations
+- **3D Mouse Parallax**: The clock pivots in 3D space in response to your cursor movements. Dynamic drop shadows drift realistically on the wall behind the clock.
+- **360-degree Spin Showcase**: A button that rotates the clock full 360 degrees on the Y-axis. Highlights and gradient specular stops sweep across the dial to simulate light glinting off the polished brass.
+- **Mechanical Rebound Bounce**: The second hand features a slight elastic recoil bounce to simulate physical escape gears when in ticking step mode, or a continuous sweep movement when sweep mode is active.
 
-Tech Highlights:
-▫️ Pure JavaScript Date API
-▫️ CSS Keyframe Animations
-▫️ Google Fonts Integration
+### ⚙️ Glassmorphic Control Drawer (Hidden Sidebar)
+Access time-management features by clicking the floating gear icon in the top-right corner:
+- **Alarms**: Set alarms that trigger alarms sounds and browser push notifications.
+- **Stopwatch**: Precise millisecond tracker showing active focus time.
+- **Countdown Timer**: Custom minutes/seconds countdown with finish alerts.
+- **Pomodoro Focus**: Integrated Work (25m) and Break (5m) focus helper.
+- **Atmosphere Weather**: Live temperature and conditions using your location, providing smart daily tips.
+- **Focus Goals & Notepad**: Save persistent checkboxes and notes stored in local storage.
+- **Themes**: Switch wall paint color, spotlight settings, or toggle the dining room foreground visibility.
 
-Great demonstration of:
+---
 
-Real-time DOM updates
+## 🚀 Quick Start
 
-User preference persistence
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Sadique721/Interactive-Digital-Clock.git
+   ```
+2. Open the clock dashboard:
+   - Navigate to the folder and open `clock.htm` in any modern web browser (Google Chrome, Microsoft Edge, Safari, or Mozilla Firefox).
+   
+*Note: Due to browser autoplay security policies, you may need to click anywhere on the screen first to activate the audio system.*
 
-Visual feedback systems
+---
 
-Check out the code: [GitHub Link]
-#JavaScript #WebDevelopment #Frontend #UIDesign #CSSAnimations #WebComponents #TechPortfolio
-✨ Watch my clock change colors with time!
-[Carousel: 1.Day Mode 2.Night Mode 3.Settings Panel]
-
-🔥 Features:
-• Real-time ticking animation
-• Background that adapts to your local time
-• Optional ticking sound effect
-• Sleek sci-fi font (Orbitron)
-
-Built with:
-💻 Vanilla JavaScript
-🎨 Pure CSS animations
-🔊 Web Audio API
-
-GitHub link in bio! 👨‍💻
-#JavaScript #DigitalClock #WebDev #CreativeCoding #UIDesign #CSS #Frontend #Developer #CodeArt #Tech #100DaysOfCode #BuildInPublic
+## 🛠️ Tech Stack & Libraries
+- **Vector Graphics**: HTML5 Scalable Vector Graphics (SVG)
+- **Styling & Themes**: Modern CSS Variables & Radial Gradients
+- **Animations**: GSAP (GreenSock Animation Platform) for timeline controls and 3D tilts
+- **Audio Logic**: Web Audio API (FM Synthesis / Wave Oscillator triggers)
+- **Persistency**: Web Storage API (`localStorage` for configuration persistence)
