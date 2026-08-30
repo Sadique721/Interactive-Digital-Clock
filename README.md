@@ -32,6 +32,19 @@
 </tr>
 </table>
 
+<!-- ========== NEW: SYSTEM DIAGRAM SECTION ========== -->
+## 📊 System Architecture & Workflow
+
+```mermaid
+flowchart TD
+    A[Browser Animation Frame] --> B[JavaScript Date Engine]
+    B --> C[Calculate Hours/Minutes/Seconds]
+    C --> D[HTML5 Canvas Drawing Clockface]
+    D --> E{Day or Night?}
+    E -->|Day| F[Light Mode Sky Backdrop]
+    E -->|Night| G[Dark Mode Starry Sky Backdrop]
+```
+
 ---
 
 # 🕒 Premium Art Deco Golden Wall Clock & Dashboard
