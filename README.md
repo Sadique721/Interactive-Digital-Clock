@@ -1,11 +1,7 @@
 <!-- ========== NEW: ANIMATED WAVE HEADER ========== -->
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,100:8b5cf6&height=200&section=header&text=Interactive-Digital-Clock&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Interactive%20Digital%20Canvas%20Clock&descAlignY=60&descAlign=50" width="100%">
-</p>
-
 <!-- ========== NEW: TYPING ANIMATION INTRO ========== -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=500&color=22D3EE&center=true&vCenter=true&width=700&lines=HTML5 Canvas Clock;Day%2fNight Theme Toggle;Custom Sound Effects;Modern JavaScript" alt="Typing SVG">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&amp;weight=600&amp;size=24&amp;duration=3000&amp;pause=500&amp;color=22D3EE&amp;center=true&amp;vCenter=true&amp;width=700&amp;lines=HTML5%20Canvas%20Clock;Day%2fNight%20Theme%20Toggle;Custom%20Sound%20Effects;Modern%20JavaScript" alt="Typing SVG">
 </p>
 
 <!-- ========== NEW: AUTHOR & ARCHITECT SECTION ========== -->
