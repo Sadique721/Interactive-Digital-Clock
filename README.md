@@ -1,3 +1,39 @@
+<!-- ========== NEW: ANIMATED WAVE HEADER ========== -->
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,100:8b5cf6&height=200&section=header&text=Interactive-Digital-Clock&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Interactive%20Digital%20Canvas%20Clock&descAlignY=60&descAlign=50" width="100%">
+</p>
+
+<!-- ========== NEW: TYPING ANIMATION INTRO ========== -->
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=500&color=22D3EE&center=true&vCenter=true&width=700&lines=HTML5 Canvas Clock;Day%2fNight Theme Toggle;Custom Sound Effects;Modern JavaScript" alt="Typing SVG">
+</p>
+
+<!-- ========== NEW: AUTHOR & ARCHITECT SECTION ========== -->
+## 👨‍💻 Author & Architect
+
+<table>
+<tr>
+<td align="center" width="160">
+  <a href="https://github.com/Sadique721">
+    <img src="https://avatars.githubusercontent.com/Sadique721" width="110" style="border-radius:50%"><br>
+    <b>Md Sadique Amin</b><br>
+    <sub>Backend Java Developer</sub>
+  </a>
+</td>
+<td>
+
+**Md Sadique Amin** — Backend Java Developer.
+
+- 🔗 GitHub: [@Sadique721](https://github.com/Sadique721)
+- 📧 Email: mdsadiqueamin721786@gmail.com
+- 🏗️ Built: Enterprise BSS-OSS Telecom Suite, Backend Java Developer, IR Interconnect & Roaming
+
+</td>
+</tr>
+</table>
+
+---
+
 # 🕒 Premium Art Deco Golden Wall Clock & Dashboard
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
@@ -59,3 +95,9 @@ Access time-management features by clicking the floating gear icon in the top-ri
 - **Animations**: GSAP (GreenSock Animation Platform) for timeline controls and 3D tilts
 - **Audio Logic**: Web Audio API (FM Synthesis / Wave Oscillator triggers)
 - **Persistency**: Web Storage API (`localStorage` for configuration persistence)
+
+
+<!-- ========== NEW: FOOTER WAVE ANIMATION ========== -->
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,100:8b5cf6&height=120&section=footer&width=100%">
+</p>
